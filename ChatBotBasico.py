@@ -1,8 +1,12 @@
 import langchain 
 from aiogram import Bot, Dispatcher, executor, types
 
+bot = Bot(token = 'SEU_TOKEN')
+dp = Dispatcher(bot)
 
-loader = langchain.document_loaders.DirectoryLoader('TelegramBOT/ArquivosTXT/', 
+Mensagem =['Mensagem']
+
+loader = langchain.document_loaders.DirectoryLoader('Directory/', 
                                                     glob="**/*.txt", 
                                                     loader_cls=langchain.document_loaders.TextLoader)
 documents = loader.load()
@@ -13,8 +17,7 @@ text_splitter = langchain.text_splitter.RecursiveCharacterTextSplitter(chunk_siz
                                                                        separators="\n\n")
 texts = text_splitter.split_documents(documents)
 
-Mensagem =['Mensagem']
-Pergunta = ['Pergunta']
+
 
 def query_gpt(input):
     embeddings = langchain.embeddings.OpenAIEmbeddings(openai_api_key = '')
@@ -24,8 +27,7 @@ def query_gpt(input):
                                                  vectorstore = doc_search)
     Mensagem[0] = chain.run(input)
 
-bot = Bot(token = 'SEU_TOKEN')
-dp = Dispatcher(bot)
+
 
 @dp.message_handler()
 async def gpt(message:types.message):
